@@ -1,0 +1,1 @@
+"""Candle domain model."""

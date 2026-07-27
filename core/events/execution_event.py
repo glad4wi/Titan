@@ -1,0 +1,1 @@
+"""Execution event data structure."""

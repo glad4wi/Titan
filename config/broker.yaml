@@ -1,0 +1,3 @@
+broker:
+  name: paper
+  connection: local
