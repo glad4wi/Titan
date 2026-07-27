@@ -1,317 +1,306 @@
 """
-===========================================================
-Titan Trading Engine
+===============================================================================
 
-Module:
-Shared Enums
+TITAN Trading Operating System
+Core Shared Enums
 
-Purpose:
-Defines every global enumeration used across TITAN.
+File:
+    core/shared/enums.py
 
-These enums establish a common language between
-all engines, analyzers, validators and services.
+Description:
+    Defines the global language used across the TITAN ecosystem.
 
-No module should use raw strings for internal
-decision making.
+    Every engine, analyzer, validator, service, broker,
+    AI model and execution component MUST use these enums.
+
+    No raw strings should ever be used for decisions.
 
 Author:
-Titan Core - Gladwin W G
+    TITAN Core
 
-===========================================================
+===============================================================================
 """
 
 from __future__ import annotations
 
-from enum import Enum, IntEnum, auto
+from enum import Enum
 
 
-# =========================================================
-# General Status
-# =========================================================
+# =============================================================================
+# BASE ENUM
+# =============================================================================
 
-class ModuleStatus(Enum):
-    """Execution status of a module."""
+class TitanEnum(str, Enum):
+    """
+    Base enumeration for TITAN.
 
-    IDLE = auto()
-    RUNNING = auto()
-    SUCCESS = auto()
-    FAILED = auto()
-    SKIPPED = auto()
+    Benefits:
+        - JSON serializable
+        - Database friendly
+        - Human readable
+        - FastAPI compatible
+        - Logging friendly
+    """
 
+    def __str__(self) -> str:
+        return self.value
 
-# =========================================================
-# Trend
-# =========================================================
 
-class TrendDirection(Enum):
-    """Market trend."""
+# =============================================================================
+# ENGINE
+# =============================================================================
 
-    BULLISH = auto()
-    BEARISH = auto()
-    RANGING = auto()
-    UNKNOWN = auto()
+class ModuleStatus(TitanEnum):
 
+    IDLE = "IDLE"
+    INITIALIZING = "INITIALIZING"
+    RUNNING = "RUNNING"
+    SUCCESS = "SUCCESS"
+    WARNING = "WARNING"
+    FAILED = "FAILED"
+    SHUTDOWN = "SHUTDOWN"
 
-# =========================================================
-# Market Structure
-# =========================================================
 
-class StructureType(Enum):
+# =============================================================================
+# MARKET TREND
+# =============================================================================
 
-    HH = auto()
-    HL = auto()
-    LH = auto()
-    LL = auto()
+class TrendDirection(TitanEnum):
 
-    BOS = auto()
-    CHOCH = auto()
+    BULLISH = "BULLISH"
+    BEARISH = "BEARISH"
+    RANGING = "RANGING"
+    TRANSITION = "TRANSITION"
+    UNKNOWN = "UNKNOWN"
 
-    INTERNAL = auto()
-    EXTERNAL = auto()
 
-    NONE = auto()
+# =============================================================================
+# MARKET STRUCTURE
+# =============================================================================
 
+class StructureType(TitanEnum):
 
-# =========================================================
-# Market Phase
-# =========================================================
+    HH = "HH"
+    HL = "HL"
+    LH = "LH"
+    LL = "LL"
 
-class MarketPhase(Enum):
+    BOS = "BOS"
+    CHOCH = "CHOCH"
 
-    TREND = auto()
+    INTERNAL = "INTERNAL"
+    EXTERNAL = "EXTERNAL"
 
-    RANGE = auto()
+    NONE = "NONE"
 
-    ACCUMULATION = auto()
 
-    DISTRIBUTION = auto()
+# =============================================================================
+# MARKET PHASE
+# =============================================================================
 
-    REACCUMULATION = auto()
+class MarketPhase(TitanEnum):
 
-    REDISTRIBUTION = auto()
+    TREND = "TREND"
 
-    UNKNOWN = auto()
+    RANGE = "RANGE"
 
+    ACCUMULATION = "ACCUMULATION"
 
-# =========================================================
-# Liquidity
-# =========================================================
+    DISTRIBUTION = "DISTRIBUTION"
 
-class LiquiditySide(Enum):
+    REACCUMULATION = "REACCUMULATION"
 
-    BUY_SIDE = auto()
+    REDISTRIBUTION = "REDISTRIBUTION"
 
-    SELL_SIDE = auto()
+    UNKNOWN = "UNKNOWN"
 
-    BOTH = auto()
 
-    NONE = auto()
+# =============================================================================
+# LIQUIDITY
+# =============================================================================
 
+class LiquiditySide(TitanEnum):
 
-class LiquidityStatus(Enum):
+    BUY_SIDE = "BUY_SIDE"
+    SELL_SIDE = "SELL_SIDE"
+    BOTH = "BOTH"
+    NONE = "NONE"
 
-    UNSWEPT = auto()
 
-    SWEPT = auto()
+class LiquidityStatus(TitanEnum):
 
-    RAIDED = auto()
+    UNSWEPT = "UNSWEPT"
+    SWEPT = "SWEPT"
+    RAIDED = "RAIDED"
+    UNKNOWN = "UNKNOWN"
 
-    UNKNOWN = auto()
 
+# =============================================================================
+# ORDER BLOCK
+# =============================================================================
 
-# =========================================================
-# Order Blocks
-# =========================================================
+class OrderBlockType(TitanEnum):
 
-class OrderBlockType(Enum):
+    BULLISH = "BULLISH"
+    BEARISH = "BEARISH"
+    BREAKER = "BREAKER"
+    MITIGATED = "MITIGATED"
+    INVALID = "INVALID"
 
-    BULLISH = auto()
 
-    BEARISH = auto()
+# =============================================================================
+# FAIR VALUE GAP
+# =============================================================================
 
-    BREAKER = auto()
+class FairValueGapType(TitanEnum):
 
-    MITIGATED = auto()
+    BULLISH = "BULLISH"
+    BEARISH = "BEARISH"
+    INVERSE = "INVERSE"
+    NONE = "NONE"
 
-    INVALID = auto()
 
+# =============================================================================
+# PREMIUM / DISCOUNT
+# =============================================================================
 
-# =========================================================
-# Fair Value Gap
-# =========================================================
+class PremiumDiscountZone(TitanEnum):
 
-class FVGType(Enum):
+    PREMIUM = "PREMIUM"
+    EQUILIBRIUM = "EQUILIBRIUM"
+    DISCOUNT = "DISCOUNT"
 
-    BULLISH = auto()
 
-    BEARISH = auto()
+# =============================================================================
+# SESSION
+# =============================================================================
 
-    INVERSE = auto()
+class TradingSession(TitanEnum):
 
-    NONE = auto()
+    SYDNEY = "SYDNEY"
+    TOKYO = "TOKYO"
+    LONDON = "LONDON"
+    NEW_YORK = "NEW_YORK"
 
+    LONDON_NEWYORK_OVERLAP = "LONDON_NEWYORK_OVERLAP"
 
-# =========================================================
-# Premium Discount
-# =========================================================
+    CLOSED = "CLOSED"
 
-class PremiumDiscountZone(Enum):
 
-    PREMIUM = auto()
+# =============================================================================
+# NEWS
+# =============================================================================
 
-    EQUILIBRIUM = auto()
+class NewsImpact(TitanEnum):
 
-    DISCOUNT = auto()
+    NONE = "NONE"
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    HOLIDAY = "HOLIDAY"
 
 
-# =========================================================
-# Sessions
-# =========================================================
+# =============================================================================
+# TRADE
+# =============================================================================
 
-class TradingSession(Enum):
+class TradeDirection(TitanEnum):
 
-    ASIAN = auto()
+    BUY = "BUY"
+    SELL = "SELL"
+    NONE = "NONE"
 
-    LONDON = auto()
 
-    NEW_YORK = auto()
+class PositionStatus(TitanEnum):
 
-    SYDNEY = auto()
+    OPEN = "OPEN"
+    CLOSED = "CLOSED"
+    PARTIAL = "PARTIAL"
+    CANCELLED = "CANCELLED"
 
-    OVERLAP = auto()
 
-    CLOSED = auto()
+# =============================================================================
+# DECISION
+# =============================================================================
 
+class DecisionType(TitanEnum):
 
-# =========================================================
-# News
-# =========================================================
+    WAIT = "WAIT"
 
-class NewsImpact(Enum):
+    WATCH = "WATCH"
 
-    LOW = auto()
+    BUY = "BUY"
 
-    MEDIUM = auto()
+    SELL = "SELL"
 
-    HIGH = auto()
+    HOLD = "HOLD"
 
-    HOLIDAY = auto()
+    EXIT = "EXIT"
 
-    NONE = auto()
 
+# =============================================================================
+# VALIDATION
+# =============================================================================
 
-# =========================================================
-# Trade Direction
-# =========================================================
+class ValidationResult(TitanEnum):
 
-class TradeDirection(Enum):
+    PASS = "PASS"
+    WARNING = "WARNING"
+    FAIL = "FAIL"
 
-    BUY = auto()
 
-    SELL = auto()
+# =============================================================================
+# SIGNAL
+# =============================================================================
 
-    NONE = auto()
+class SignalStrength(TitanEnum):
 
+    VERY_WEAK = "VERY_WEAK"
+    WEAK = "WEAK"
+    MODERATE = "MODERATE"
+    STRONG = "STRONG"
+    VERY_STRONG = "VERY_STRONG"
 
-# =========================================================
-# Decision
-# =========================================================
 
-class DecisionType(Enum):
+# =============================================================================
+# RISK
+# =============================================================================
 
-    WAIT = auto()
+class RiskLevel(TitanEnum):
 
-    WATCH = auto()
+    VERY_LOW = "VERY_LOW"
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    EXTREME = "EXTREME"
 
-    BUY = auto()
 
-    SELL = auto()
+# =============================================================================
+# CONFIDENCE
+# =============================================================================
 
-    EXIT = auto()
+class ConfidenceLevel(TitanEnum):
 
-    HOLD = auto()
+    VERY_LOW = "VERY_LOW"
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    VERY_HIGH = "VERY_HIGH"
 
 
-# =========================================================
-# Risk
-# =========================================================
+# =============================================================================
+# TIMEFRAME
+# =============================================================================
 
-class RiskLevel(Enum):
-
-    VERY_LOW = auto()
-
-    LOW = auto()
-
-    MEDIUM = auto()
-
-    HIGH = auto()
-
-    EXTREME = auto()
-
-
-# =========================================================
-# Confidence
-# =========================================================
-
-class ConfidenceLevel(IntEnum):
-
-    VERY_LOW = 20
-
-    LOW = 40
-
-    MEDIUM = 60
-
-    HIGH = 80
-
-    VERY_HIGH = 100
-
-
-# =========================================================
-# Signal Strength
-# =========================================================
-
-class SignalStrength(IntEnum):
-
-    WEAK = 25
-
-    MODERATE = 50
-
-    STRONG = 75
-
-    VERY_STRONG = 100
-
-
-# =========================================================
-# Validation
-# =========================================================
-
-class ValidationResult(Enum):
-
-    PASS = auto()
-
-    WARNING = auto()
-
-    FAIL = auto()
-
-
-# =========================================================
-# Timeframes
-# =========================================================
-
-class TimeFrame(Enum):
+class TimeFrame(TitanEnum):
 
     M1 = "1m"
-
     M3 = "3m"
-
     M5 = "5m"
-
     M15 = "15m"
-
     M30 = "30m"
 
     H1 = "1h"
-
     H4 = "4h"
 
     D1 = "1d"
